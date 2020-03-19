@@ -1,0 +1,12 @@
+order,0,sell,7,50.05
+order,1,sell,7,50.20
+order,55,sell,7,50.20
+order,2,sell,7,50.30
+order,3,sell,7,50.15
+order,4,buy,13,150.05
+order,5,buy,44,50.07
+cancel,1
+amend,55,6
+amend,55,10
+q,level,ask,0
+q,order,5
