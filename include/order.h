@@ -98,6 +98,9 @@ namespace orderBook {
 			OrderStatus orderStatus = e_NotExecuted;
 				while (orderStatus != e_NotMatching) {
 					orderStatus = tryOrderExecute(_order);
+
+					if (orderStatus == e_Fully)
+						break;
 				}
 
 			if (orderStatus == e_Fully)
@@ -285,11 +288,17 @@ namespace orderBook {
 						if (sellOrderPtr->m_qty >= currentOrder->m_qty) {
 							sellOrderPtr->m_qty -= currentOrder->m_qty;
 
-							out << "order "<< currentOrder->m_orderId<< " executed " << sellOrderPtr->m_qty
+							out << "order "<< currentOrder->m_orderId<< " executed " << currentOrder->m_qty
 							<< "@"<< sellOrderPtr->m_price<<endl;
 
-							if (sellOrderPtr->m_qty == 0)
+							if (sellOrderPtr->m_qty == 0) {
 								sellList.pop_front();
+
+								auto it = m_orders.find(sellOrderPtr->m_orderId);
+								if (it != m_orders.end()) {
+									m_orders.erase(it);
+								}
+							}
 
 							return e_Fully;
 						}
@@ -298,6 +307,12 @@ namespace orderBook {
 							out << "order " << currentOrder->m_orderId << " executed " << sellOrderPtr->m_qty
 								<< "@" << sellOrderPtr->m_price << endl;
 							//sell order exhausted delete it 
+
+							auto it = m_orders.find(sellOrderPtr->m_orderId);
+							if (it != m_orders.end()) {
+								m_orders.erase(it);
+							}
+
 							sellList.pop_front();
 						}
 					}
@@ -320,11 +335,18 @@ namespace orderBook {
 						sOrderPtr buyOrderPtr = buyList.front();
 						if (buyOrderPtr->m_qty >= currentOrder->m_qty) {
 							buyOrderPtr->m_qty -= currentOrder->m_qty;
-							out << "order " << currentOrder->m_orderId << " executed " << buyOrderPtr->m_qty
-								<< "@" << buyOrderPtr->m_price << endl;
+							out << "order " << currentOrder->m_orderId << " executed " << currentOrder->m_qty
+								<< "@" << currentOrder->m_price << endl;
 
-							if (buyOrderPtr->m_qty == 0)
+							if (buyOrderPtr->m_qty == 0) {
+
+								auto it = m_orders.find(buyOrderPtr->m_orderId);
+								if (it != m_orders.end()) {
+									m_orders.erase(it);
+								}
+
 								buyList.pop_front();
+							}
 
 							return e_Fully;
 						}
@@ -332,7 +354,12 @@ namespace orderBook {
 							currentOrder->m_qty -= buyOrderPtr->m_qty;
 							//sell order exhausted delete it 
 							out << "order " << currentOrder->m_orderId << " executed " << buyOrderPtr->m_qty
-								<< "@" << buyOrderPtr->m_price << endl;
+								<< "@" << currentOrder->m_price << endl;
+
+							auto it = m_orders.find(buyOrderPtr->m_orderId);
+							if (it != m_orders.end()) {
+								m_orders.erase(it);
+							}
 
 							buyList.pop_front();
 						}

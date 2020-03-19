@@ -19,6 +19,11 @@ namespace orderBook {
 					if (tokens[0] == "exit" || tokens[0] == "quit")
 						break;
 
+					if (tokens[0] == "show") {
+						orderBook.print(out);
+						continue;
+					}
+
 					//based on the first token[0] create order
 					sOrderPtr orderPtr = createOrderObject(tokens);
 
