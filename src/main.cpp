@@ -23,7 +23,7 @@ int main(int argc, char **argv) {
 	
 	LimitOrderBook orderBook(std::cout);
 
-	if (/*inFile.is_open()*/false) {
+	if (inFile.is_open()) {
 		std::cout << "Reading order from file:" << filename<<endl;
 
 		mainLoop(inFile, orderBook);
