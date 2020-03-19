@@ -4,6 +4,9 @@ This is sample limit order book written in c++ 11 and test cases are using BOOST
 
 How to build
 
+define a environmnet variable for boost named "BOOST_ROOT_DIR"
+to comppile test case.
+
 $git clone <url>
 $cd <dir>
 $mkdir build
